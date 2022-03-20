@@ -4,9 +4,9 @@ from win32com.client import Dispatch
 import os, winshell
 
 
-testpath = 'E:\\Jonas\\Desktop\\'
 CWD = os.getcwd()   
 
+print("CWD")
 
 def create_shortcut(name, targetToSave, targetToLink):
     path = os.path.join(targetToSave, name + ".lnk" )
@@ -31,25 +31,29 @@ def get_directory_structure(rootdir):
         parent[folders[-1]] = subdir
     return dir    
 
-
-create_shortcut("test", testpath, "C:\\Users\\")
-
+# print("creating tree")
 tree = get_directory_structure("Globales Lernen")
-
+# print(tree)
 
 for themenDir in tree["Globales Lernen"]["Lateinamerika"]:
+    if tree["Globales Lernen"]["Lateinamerika"][themenDir] == None:
+        print(f"{themenDir} ist ein file")
+        continue
     print(f"selected {themenDir}")
-    for landDir in tree ["Globales Lernen"]:
+    for landDir in tree["Globales Lernen"]:
         if landDir == "Lateinamerika": 
             continue
-        print(f"searching in {landDir} for {themenDir}")
+        # print(f"searching in {landDir} for {themenDir}")
         try:
+
             if tree["Globales Lernen"][landDir][themenDir]:
-                targetToSave = f"C:\\Users\\locke\\Coding\\GL-links\\Globales Lernen\\Lateinamerika\\{themenDir}\\"
-                targetToLink = f"C:\\Users\\locke\\Coding\\GL-links\\Globales Lernen\\{landDir}\\{themenDir}"
+                targetToSave = f"{CWD}\\Globales Lernen\\Lateinamerika\\{themenDir}\\"
+                targetToLink = f"{CWD}\\Globales Lernen\\{landDir}\\{themenDir}"
                 print(f"{themenDir} in {landDir} vorhanden, \n erstelle shortcut in \n {targetToSave} nach: \n {targetToLink}")
                 create_shortcut(f"{themenDir} in {landDir}" , targetToSave, targetToLink)
         except KeyError:
-            print(f"{themenDir} ist in {landDir} nicht vorhanden")
+            # print(f"{themenDir} ist in {landDir} nicht vorhanden")
+        except TypeError:
+            # print(f"{themenDir} ist ein file")
 
 
